@@ -7,7 +7,7 @@ import { CartContext } from "../../Context/CartContext";
 import { useEffect } from "react";
 
 export default function Navbar() {
-  let { numOfCartItems, getCart } = useContext(CartContext);
+  let { numOfCartItems, getCart, numOfWishlistItems } = useContext(CartContext);
   const [isScrolling, setIsScrolling] = useState(false);
   const [isMobileMenuOpen, setIsMobileMenuOpen] = useState(false);
   let navigate = useNavigate();
@@ -212,11 +212,14 @@ export default function Navbar() {
                     onClick={toggleMobileMenu}
                     className={({ isActive }) =>
                       isActive
-                        ? "text-main transition-all duration-300 block font-semibold py-2 px-3 rounded hover:bg-gray-100 md:hover:bg-transparent md:hover:text-main md:p-0 "
-                        : "text-gray-500 transition-all duration-300 font-semibold block py-2 px-3 rounded hover:bg-gray-100 md:hover:bg-transparent md:hover:text-main md:p-0 "
+                        ? "relative text-main transition-all duration-300 block font-semibold py-2 px-3 rounded hover:bg-gray-100 md:hover:bg-transparent md:hover:text-main md:p-0 "
+                        : "relative text-gray-500 transition-all duration-300 font-semibold block py-2 px-3 rounded hover:bg-gray-100 md:hover:bg-transparent md:hover:text-main md:p-0 "
                     }
                   >
                     Wishlist
+                    <span className="absolute top-0 left-16 bg-green-100 text-green-800 text-xs font-bold mx-3 md:mx-2 px-2.5 py-0.5 rounded-full border-1 border-green-700">
+                      {numOfWishlistItems}
+                    </span>
                   </NavLink>
                 </li>
               </ul>

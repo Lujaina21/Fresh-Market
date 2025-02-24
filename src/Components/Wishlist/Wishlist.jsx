@@ -9,7 +9,8 @@ import { Helmet } from "react-helmet";
 export default function Wishlist() {
   const [isLoading, setIsLoading] = useState(true);
   const [wishlistProducts, setWishlistProducts] = useState([]);
-  const { addToCart, toggleWishlist } = useContext(CartContext);
+  const { addToCart, toggleWishlist, setNumOfWishlistItems } =
+    useContext(CartContext);
 
   const headers = { token: localStorage.getItem("userToken") };
 
@@ -26,6 +27,7 @@ export default function Wishlist() {
       .get("https://ecommerce.routemisr.com/api/v1/wishlist", { headers })
       .then((response) => {
         setWishlistProducts(response.data.data);
+        setNumOfWishlistItems(response.data.count || response.data.data.length);
         setIsLoading(false);
       })
       .catch((err) => {
@@ -40,6 +42,7 @@ export default function Wishlist() {
       setWishlistProducts((currentProd) =>
         currentProd.filter((prod) => prod._id !== productId)
       );
+      setNumOfWishlistItems((prev) => Math.max(prev - 1, 0));
     } catch (err) {
       console.log("Error removing product from wishlist: ", err);
     }

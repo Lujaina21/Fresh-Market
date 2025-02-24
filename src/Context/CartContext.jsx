@@ -1,5 +1,5 @@
 import axios from "axios";
-import { createContext, useState, useEffect } from "react";
+import { createContext, useEffect, useState } from "react";
 import toast from "react-hot-toast";
 
 export let CartContext = createContext();
@@ -7,6 +7,7 @@ export let CartContext = createContext();
 export default function CartContextProvider(props) {
   const [totalPrice, setTotalPrice] = useState(0);
   const [numOfCartItems, setNumOfCartItems] = useState(0);
+  const [numOfWishlistItems, setNumOfWishlistItems] = useState(0);
   const [cartID, setCartID] = useState(null);
   let headers = { token: localStorage.getItem("userToken") };
 
@@ -21,8 +22,12 @@ export default function CartContextProvider(props) {
           }
         )
         .then((response) => {
-          console.log("Product removed from wishlist");
+          console.log(
+            "Product removed from wishlist, the remaining items: ",
+            response.data.data.length
+          );
           toast.success("Product removed from wishlist ✅");
+          setNumOfWishlistItems(response.data.data.length);
           return response.data;
         })
         .catch((err) => {
@@ -39,8 +44,12 @@ export default function CartContextProvider(props) {
           { headers }
         )
         .then((response) => {
-          console.log("Product added to wishlist");
+          console.log(
+            "Product added to wishlist, total num:",
+            response.data.data.length
+          );
           toast.success("Product added to wishlist ✅");
+          setNumOfWishlistItems(response.data.data.length);
           return response.data;
         })
         .catch((err) => {
@@ -59,7 +68,7 @@ export default function CartContextProvider(props) {
         { headers }
       )
       .then((response) => {
-        // console.log("Add to Cart: " , response);
+        // console.log("Add to Cart: ", response);
         toast.success(response.data.message);
         setCartID(response.data.data._id);
         setNumOfCartItems(response.data.numOfCartItems);
@@ -213,6 +222,8 @@ export default function CartContextProvider(props) {
         toggleWishlist,
         numOfCartItems,
         totalPrice,
+        numOfWishlistItems,
+        setNumOfWishlistItems,
       }}
     >
       {props.children}
